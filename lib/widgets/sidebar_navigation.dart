@@ -42,48 +42,7 @@ class SidebarNavigation extends StatelessWidget {
       child: SafeArea(
         child: Column(
           children: [
-            const SizedBox(height: 18),
-
-            // Logo with gradient glow
-            Container(
-              width: 42,
-              height: 42,
-              decoration: BoxDecoration(
-                gradient: const LinearGradient(
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                  colors: [AppColors.duskyBlue, AppColors.twilightPurple],
-                ),
-                borderRadius: BorderRadius.circular(14),
-                boxShadow: [
-                  BoxShadow(
-                    color: AppColors.duskyBlue.withValues(alpha: 0.5),
-                    blurRadius: 14,
-                    spreadRadius: 0,
-                  ),
-                ],
-              ),
-              child: const Icon(
-                Icons.local_hospital_rounded,
-                color: Colors.white,
-                size: 22,
-              ),
-            ),
-            const SizedBox(height: 5),
-            Text(
-              'SYN',
-              style: TextStyle(
-                color: AppColors.lavenderHaze.withValues(alpha: 0.35),
-                fontSize: 8,
-                fontWeight: FontWeight.w900,
-                letterSpacing: 2,
-              ),
-            ),
-            const SizedBox(height: 18),
-
-            // Divider
-            _buildDivider(),
-            const SizedBox(height: 14),
+            const SizedBox(height: 22),
 
             // Nav items
             _buildNavItem(context, index: 0,
@@ -101,9 +60,6 @@ class SidebarNavigation extends StatelessWidget {
                     MaterialPageRoute(
                         builder: (_) =>
                             HospitalStatusPage(profile: profile)))),
-            const SizedBox(height: 2),
-            _buildNavItem(context, index: 3,
-                icon: Icons.notifications_rounded, label: 'Alerts'),
 
             const Spacer(),
 
@@ -111,7 +67,7 @@ class SidebarNavigation extends StatelessWidget {
             _buildDivider(),
             const SizedBox(height: 8),
 
-            _buildNavItem(context, index: 4,
+            _buildNavItem(context, index: 3,
                 icon: Icons.settings_rounded, label: 'Settings'),
             const SizedBox(height: 16),
           ],

@@ -1,3 +1,4 @@
+﻿import 'dart:ui';
 import 'package:flutter/material.dart';
 import '../constants/app_colors.dart';
 import '../models/user_profile.dart';
@@ -10,7 +11,8 @@ class LoginPage extends StatefulWidget {
   State<LoginPage> createState() => _LoginPageState();
 }
 
-class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMixin {
+class _LoginPageState extends State<LoginPage>
+    with SingleTickerProviderStateMixin {
   final _formKey = GlobalKey<FormState>();
   final _nameController = TextEditingController();
   final _hospitalController = TextEditingController();
@@ -19,21 +21,17 @@ class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMix
   final _specializationController = TextEditingController();
   bool _isLogin = true;
   bool _obscurePassword = true;
-  late AnimationController _animationController;
-  late Animation<double> _fadeAnimation;
+  late AnimationController _animCtrl;
+  late Animation<double> _fadeAnim;
 
   @override
   void initState() {
     super.initState();
-    _animationController = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 800),
-    );
-    _fadeAnimation = CurvedAnimation(
-      parent: _animationController,
-      curve: Curves.easeInOut,
-    );
-    _animationController.forward();
+    _animCtrl = AnimationController(
+        vsync: this, duration: const Duration(milliseconds: 500));
+    _fadeAnim =
+        CurvedAnimation(parent: _animCtrl, curve: Curves.easeOut);
+    _animCtrl.forward();
   }
 
   @override
@@ -43,78 +41,29 @@ class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMix
     _idNumberController.dispose();
     _passwordController.dispose();
     _specializationController.dispose();
-    _animationController.dispose();
+    _animCtrl.dispose();
     super.dispose();
   }
 
   void _toggleMode() {
-    setState(() {
-      _isLogin = !_isLogin;
-    });
-    _animationController.reset();
-    _animationController.forward();
+    setState(() => _isLogin = !_isLogin);
+    _animCtrl.reset();
+    _animCtrl.forward();
   }
 
   void _submit() {
     if (!_formKey.currentState!.validate()) return;
-
-    if (_isLogin) {
-      // Mock login — go directly to camera verification then dashboard
-      final profile = UserProfile(
-        name: _nameController.text,
-        hospital: _hospitalController.text,
-        idNumber: _idNumberController.text,
-      );
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (_) => CameraVerificationPage(profile: profile),
-        ),
-      );
-    } else {
-      // Sign up — go to camera verification
-      final profile = UserProfile(
-        name: _nameController.text,
-        hospital: _hospitalController.text,
-        idNumber: _idNumberController.text,
-        specialization: _specializationController.text.isNotEmpty
-            ? _specializationController.text
-            : null,
-      );
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (_) => CameraVerificationPage(profile: profile),
-        ),
-      );
-    }
-  }
-
-  InputDecoration _inputDecoration(String label, IconData icon) {
-    return InputDecoration(
-      labelText: label,
-      labelStyle: const TextStyle(color: AppColors.lavenderHaze),
-      prefixIcon: Icon(icon, color: AppColors.duskyBlue),
-      filled: true,
-      fillColor: Colors.white.withValues(alpha: 0.1),
-      enabledBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(16),
-        borderSide: BorderSide(color: AppColors.duskyBlue.withValues(alpha: 0.3)),
-      ),
-      focusedBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(16),
-        borderSide: const BorderSide(color: AppColors.duskyBlue, width: 2),
-      ),
-      errorBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(16),
-        borderSide: const BorderSide(color: Colors.redAccent),
-      ),
-      focusedErrorBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(16),
-        borderSide: const BorderSide(color: Colors.redAccent, width: 2),
-      ),
-      errorStyle: const TextStyle(color: Colors.orangeAccent),
+    final profile = UserProfile(
+      name: _nameController.text,
+      hospital: _hospitalController.text,
+      idNumber: _idNumberController.text,
+      specialization: _specializationController.text.isNotEmpty
+          ? _specializationController.text
+          : null,
     );
+    Navigator.push(context,
+        MaterialPageRoute(
+            builder: (_) => CameraVerificationPage(profile: profile)));
   }
 
   @override
@@ -122,236 +71,444 @@ class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMix
     return Scaffold(
       body: Container(
         decoration: const BoxDecoration(gradient: AppColors.loginGradient),
-        child: SafeArea(
-          child: Center(
-            child: SingleChildScrollView(
-              padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 24),
-              child: FadeTransition(
-                opacity: _fadeAnimation,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    // Logo / App Title
-                    Container(
-                      padding: const EdgeInsets.all(20),
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: Colors.white.withValues(alpha: 0.1),
-                        border: Border.all(
-                          color: AppColors.duskyBlue.withValues(alpha: 0.4),
-                          width: 2,
+        child: Stack(
+          children: [
+            // Decorative blur orbs
+            Positioned(
+              top: -80,
+              right: -80,
+              child: _Orb(size: 280, color: AppColors.duskyBlue, opacity: 0.18),
+            ),
+            Positioned(
+              bottom: -100,
+              left: -80,
+              child: _Orb(size: 320, color: AppColors.twilightPurple, opacity: 0.22),
+            ),
+            Positioned(
+              top: 200,
+              left: -60,
+              child: _Orb(size: 160, color: AppColors.duskyBlue, opacity: 0.10),
+            ),
+
+            // Content
+            SafeArea(
+              child: Center(
+                child: SingleChildScrollView(
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: 28, vertical: 32),
+                  child: FadeTransition(
+                    opacity: _fadeAnim,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        // Logo badge
+                        Container(
+                          width: 64,
+                          height: 64,
+                          decoration: BoxDecoration(
+                            gradient: const LinearGradient(
+                              begin: Alignment.topLeft,
+                              end: Alignment.bottomRight,
+                              colors: [
+                                AppColors.duskyBlue,
+                                AppColors.twilightPurple
+                              ],
+                            ),
+                            borderRadius: BorderRadius.circular(20),
+                            boxShadow: [
+                              BoxShadow(
+                                color: AppColors.duskyBlue
+                                    .withValues(alpha: 0.5),
+                                blurRadius: 24,
+                                spreadRadius: 0,
+                              ),
+                            ],
+                          ),
+                          child: const Icon(
+                            Icons.local_hospital_rounded,
+                            color: Colors.white,
+                            size: 30,
+                          ),
                         ),
-                      ),
-                      child: const Icon(
-                        Icons.local_hospital_rounded,
-                        size: 56,
-                        color: AppColors.lavenderHaze,
-                      ),
-                    ),
-                    const SizedBox(height: 16),
-                    const Text(
-                      'SYNAPSE',
-                      style: TextStyle(
-                        fontSize: 36,
-                        fontWeight: FontWeight.w900,
-                        color: AppColors.lavenderHaze,
-                        letterSpacing: 6,
-                      ),
-                    ),
-                    const SizedBox(height: 4),
-                    Text(
-                      'DOH Hospital Network',
-                      style: TextStyle(
-                        fontSize: 14,
-                        color: AppColors.duskyBlue.withValues(alpha: 0.8),
-                        letterSpacing: 2,
-                      ),
-                    ),
-                    const SizedBox(height: 40),
+                        const SizedBox(height: 16),
 
-                    // Toggle tabs
-                    Container(
-                      decoration: BoxDecoration(
-                        color: Colors.white.withValues(alpha: 0.08),
-                        borderRadius: BorderRadius.circular(16),
-                      ),
-                      child: Row(
-                        children: [
-                          Expanded(
-                            child: GestureDetector(
-                              onTap: () {
-                                if (!_isLogin) _toggleMode();
-                              },
-                              child: AnimatedContainer(
-                                duration: const Duration(milliseconds: 300),
-                                padding: const EdgeInsets.symmetric(vertical: 14),
-                                decoration: BoxDecoration(
-                                  color: _isLogin
-                                      ? AppColors.duskyBlue
-                                      : Colors.transparent,
-                                  borderRadius: BorderRadius.circular(16),
-                                ),
-                                child: Text(
-                                  'Login',
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    color: _isLogin
-                                        ? Colors.white
-                                        : AppColors.lavenderHaze,
-                                    fontSize: 16,
-                                  ),
-                                ),
-                              ),
+                        // SYNAPSE gradient text
+                        ShaderMask(
+                          shaderCallback: (bounds) =>
+                              const LinearGradient(
+                            colors: [
+                              AppColors.lavenderHaze,
+                              AppColors.duskyBlue
+                            ],
+                          ).createShader(bounds),
+                          child: const Text(
+                            'SYNAPSE',
+                            style: TextStyle(
+                              fontSize: 34,
+                              fontWeight: FontWeight.w900,
+                              color: Colors.white,
+                              letterSpacing: 6,
                             ),
                           ),
-                          Expanded(
-                            child: GestureDetector(
-                              onTap: () {
-                                if (_isLogin) _toggleMode();
-                              },
-                              child: AnimatedContainer(
-                                duration: const Duration(milliseconds: 300),
-                                padding: const EdgeInsets.symmetric(vertical: 14),
-                                decoration: BoxDecoration(
-                                  color: !_isLogin
-                                      ? AppColors.duskyBlue
-                                      : Colors.transparent,
-                                  borderRadius: BorderRadius.circular(16),
-                                ),
-                                child: Text(
-                                  'Sign Up',
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    color: !_isLogin
-                                        ? Colors.white
-                                        : AppColors.lavenderHaze,
-                                    fontSize: 16,
-                                  ),
-                                ),
-                              ),
-                            ),
+                        ),
+                        const SizedBox(height: 4),
+                        Text(
+                          'DOH Metro Manila Hospital Network',
+                          style: TextStyle(
+                            fontSize: 12,
+                            color: AppColors.duskyBlue
+                                .withValues(alpha: 0.85),
+                            letterSpacing: 1.2,
                           ),
-                        ],
-                      ),
-                    ),
-                    const SizedBox(height: 32),
+                        ),
+                        const SizedBox(height: 36),
 
-                    // Form
-                    Form(
-                      key: _formKey,
-                      child: Column(
-                        children: [
-                          TextFormField(
-                            controller: _nameController,
-                            style: const TextStyle(color: Colors.white),
-                            decoration: _inputDecoration('Full Name', Icons.person),
-                            validator: (v) =>
-                                v == null || v.isEmpty ? 'Name is required' : null,
-                          ),
-                          const SizedBox(height: 16),
-                          TextFormField(
-                            controller: _hospitalController,
-                            style: const TextStyle(color: Colors.white),
-                            decoration:
-                                _inputDecoration('Hospital', Icons.local_hospital),
-                            validator: (v) =>
-                                v == null || v.isEmpty ? 'Hospital is required' : null,
-                          ),
-                          const SizedBox(height: 16),
-                          TextFormField(
-                            controller: _idNumberController,
-                            style: const TextStyle(color: Colors.white),
-                            decoration: _inputDecoration('ID Number', Icons.badge),
-                            validator: (v) =>
-                                v == null || v.isEmpty ? 'ID Number is required' : null,
-                          ),
-                          const SizedBox(height: 16),
-                          if (!_isLogin) ...[
-                            TextFormField(
-                              controller: _specializationController,
-                              style: const TextStyle(color: Colors.white),
-                              decoration: _inputDecoration(
-                                  'Specialization (optional)', Icons.school),
-                            ),
-                            const SizedBox(height: 16),
-                          ],
-                          TextFormField(
-                            controller: _passwordController,
-                            style: const TextStyle(color: Colors.white),
-                            obscureText: _obscurePassword,
-                            decoration: _inputDecoration('Password', Icons.lock)
-                                .copyWith(
-                              suffixIcon: IconButton(
-                                icon: Icon(
-                                  _obscurePassword
-                                      ? Icons.visibility_off
-                                      : Icons.visibility,
-                                  color: AppColors.duskyBlue,
+                        // Glassmorphism form card
+                        ClipRRect(
+                          borderRadius: BorderRadius.circular(28),
+                          child: BackdropFilter(
+                            filter: ImageFilter.blur(
+                                sigmaX: 20, sigmaY: 20),
+                            child: Container(
+                              decoration: BoxDecoration(
+                                color: Colors.white
+                                    .withValues(alpha: 0.08),
+                                borderRadius:
+                                    BorderRadius.circular(28),
+                                border: Border.all(
+                                  color: Colors.white
+                                      .withValues(alpha: 0.14),
                                 ),
-                                onPressed: () {
-                                  setState(() {
-                                    _obscurePassword = !_obscurePassword;
-                                  });
-                                },
                               ),
-                            ),
-                            validator: (v) => v == null || v.length < 4
-                                ? 'Password must be at least 4 characters'
-                                : null,
-                          ),
-                          const SizedBox(height: 32),
-
-                          // Submit button
-                          SizedBox(
-                            width: double.infinity,
-                            height: 56,
-                            child: ElevatedButton(
-                              onPressed: _submit,
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: AppColors.duskyBlue,
-                                foregroundColor: Colors.white,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(16),
-                                ),
-                                elevation: 8,
-                                shadowColor: AppColors.duskyBlue.withValues(alpha: 0.4),
-                              ),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
+                              padding: const EdgeInsets.all(24),
+                              child: Column(
                                 children: [
-                                  Text(
-                                    _isLogin ? 'Login & Verify' : 'Sign Up & Verify',
-                                    style: const TextStyle(
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.bold,
-                                      letterSpacing: 1,
+                                  // Segmented toggle
+                                  Container(
+                                    height: 46,
+                                    decoration: BoxDecoration(
+                                      color: Colors.white
+                                          .withValues(alpha: 0.08),
+                                      borderRadius:
+                                          BorderRadius.circular(14),
+                                    ),
+                                    child: Row(
+                                      children: [
+                                        _buildTab('Login', _isLogin),
+                                        _buildTab(
+                                            'Sign Up', !_isLogin),
+                                      ],
                                     ),
                                   ),
-                                  const SizedBox(width: 8),
-                                  const Icon(Icons.camera_alt, size: 20),
+                                  const SizedBox(height: 24),
+
+                                  // Form
+                                  FadeTransition(
+                                    opacity: _fadeAnim,
+                                    child: Form(
+                                      key: _formKey,
+                                      child: Column(
+                                        children: [
+                                          _buildField(
+                                            controller:
+                                                _nameController,
+                                            label: 'Full Name',
+                                            icon: Icons.person_outline_rounded,
+                                            validator: (v) =>
+                                                v == null || v.isEmpty
+                                                    ? 'Required'
+                                                    : null,
+                                          ),
+                                          const SizedBox(height: 12),
+                                          _buildField(
+                                            controller:
+                                                _hospitalController,
+                                            label: 'Hospital',
+                                            icon: Icons.local_hospital_outlined,
+                                            validator: (v) =>
+                                                v == null || v.isEmpty
+                                                    ? 'Required'
+                                                    : null,
+                                          ),
+                                          const SizedBox(height: 12),
+                                          _buildField(
+                                            controller:
+                                                _idNumberController,
+                                            label: 'ID / PRC Number',
+                                            icon: Icons.badge_outlined,
+                                            validator: (v) =>
+                                                v == null || v.isEmpty
+                                                    ? 'Required'
+                                                    : null,
+                                          ),
+                                          if (!_isLogin) ...[
+                                            const SizedBox(height: 12),
+                                            _buildField(
+                                              controller:
+                                                  _specializationController,
+                                              label:
+                                                  'Specialization (optional)',
+                                              icon: Icons.school_outlined,
+                                            ),
+                                          ],
+                                          const SizedBox(height: 12),
+                                          _buildField(
+                                            controller:
+                                                _passwordController,
+                                            label: 'Password',
+                                            icon: Icons.lock_outline_rounded,
+                                            obscure: _obscurePassword,
+                                            suffixIcon: IconButton(
+                                              icon: Icon(
+                                                _obscurePassword
+                                                    ? Icons.visibility_off_outlined
+                                                    : Icons.visibility_outlined,
+                                                color: AppColors
+                                                    .duskyBlue
+                                                    .withValues(
+                                                        alpha: 0.7),
+                                                size: 20,
+                                              ),
+                                              onPressed: () => setState(
+                                                  () => _obscurePassword =
+                                                      !_obscurePassword),
+                                            ),
+                                            validator: (v) =>
+                                                v == null || v.length < 4
+                                                    ? 'Min 4 characters'
+                                                    : null,
+                                          ),
+                                          const SizedBox(height: 24),
+
+                                          // Gradient submit button
+                                          SizedBox(
+                                            width: double.infinity,
+                                            height: 52,
+                                            child: DecoratedBox(
+                                              decoration: BoxDecoration(
+                                                gradient:
+                                                    const LinearGradient(
+                                                  colors: [
+                                                    AppColors.duskyBlue,
+                                                    AppColors.twilightPurple,
+                                                  ],
+                                                ),
+                                                borderRadius:
+                                                    BorderRadius
+                                                        .circular(16),
+                                                boxShadow: [
+                                                  BoxShadow(
+                                                    color: AppColors
+                                                        .duskyBlue
+                                                        .withValues(
+                                                            alpha: 0.45),
+                                                    blurRadius: 16,
+                                                    offset:
+                                                        const Offset(
+                                                            0, 6),
+                                                  ),
+                                                ],
+                                              ),
+                                              child: ElevatedButton(
+                                                onPressed: _submit,
+                                                style: ElevatedButton
+                                                    .styleFrom(
+                                                  backgroundColor:
+                                                      Colors
+                                                          .transparent,
+                                                  shadowColor:
+                                                      Colors.transparent,
+                                                  shape: RoundedRectangleBorder(
+                                                    borderRadius:
+                                                        BorderRadius
+                                                            .circular(
+                                                                16),
+                                                  ),
+                                                ),
+                                                child: Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment
+                                                          .center,
+                                                  children: [
+                                                    Text(
+                                                      _isLogin
+                                                          ? 'Login & Verify'
+                                                          : 'Sign Up & Verify',
+                                                      style:
+                                                          const TextStyle(
+                                                        fontSize: 16,
+                                                        fontWeight:
+                                                            FontWeight
+                                                                .bold,
+                                                        color:
+                                                            Colors.white,
+                                                        letterSpacing:
+                                                            0.5,
+                                                      ),
+                                                    ),
+                                                    const SizedBox(
+                                                        width: 8),
+                                                    const Icon(
+                                                        Icons.arrow_forward_rounded,
+                                                        color:
+                                                            Colors.white,
+                                                        size: 18),
+                                                  ],
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
                                 ],
                               ),
                             ),
                           ),
-                          const SizedBox(height: 20),
-                          Text(
-                            'You will be asked to verify your credentials\nby capturing your PRC license or professional ID.',
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                              color: AppColors.lavenderHaze.withValues(alpha: 0.6),
-                              fontSize: 12,
-                            ),
+                        ),
+
+                        const SizedBox(height: 20),
+                        Text(
+                          'You will verify your credentials via\ncamera after submitting.',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            color: AppColors.lavenderHaze
+                                .withValues(alpha: 0.45),
+                            fontSize: 11,
                           ),
-                        ],
-                      ),
+                        ),
+                      ],
                     ),
-                  ],
+                  ),
                 ),
               ),
             ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildTab(String label, bool active) {
+    return Expanded(
+      child: GestureDetector(
+        onTap: () {
+          if (active) return;
+          _toggleMode();
+        },
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 250),
+          margin: const EdgeInsets.all(4),
+          decoration: BoxDecoration(
+            color: active
+                ? AppColors.duskyBlue
+                : Colors.transparent,
+            borderRadius: BorderRadius.circular(10),
+            boxShadow: active
+                ? [
+                    BoxShadow(
+                      color: AppColors.duskyBlue
+                          .withValues(alpha: 0.35),
+                      blurRadius: 8,
+                    )
+                  ]
+                : [],
           ),
+          child: Center(
+            child: Text(
+              label,
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 14,
+                color: active
+                    ? Colors.white
+                    : AppColors.lavenderHaze
+                        .withValues(alpha: 0.55),
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildField({
+    required TextEditingController controller,
+    required String label,
+    required IconData icon,
+    bool obscure = false,
+    Widget? suffixIcon,
+    String? Function(String?)? validator,
+  }) {
+    return TextFormField(
+      controller: controller,
+      obscureText: obscure,
+      style: const TextStyle(
+          color: Colors.white, fontSize: 14),
+      validator: validator,
+      decoration: InputDecoration(
+        labelText: label,
+        labelStyle: TextStyle(
+          color: AppColors.lavenderHaze.withValues(alpha: 0.65),
+          fontSize: 13,
+        ),
+        prefixIcon: Icon(icon,
+            color: AppColors.duskyBlue.withValues(alpha: 0.85),
+            size: 20),
+        suffixIcon: suffixIcon,
+        filled: true,
+        fillColor: Colors.white.withValues(alpha: 0.07),
+        contentPadding:
+            const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(14),
+          borderSide: BorderSide(
+              color: Colors.white.withValues(alpha: 0.12)),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(14),
+          borderSide: const BorderSide(
+              color: AppColors.duskyBlue, width: 1.5),
+        ),
+        errorBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(14),
+          borderSide:
+              const BorderSide(color: Colors.redAccent),
+        ),
+        focusedErrorBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(14),
+          borderSide:
+              const BorderSide(color: Colors.redAccent, width: 1.5),
+        ),
+        errorStyle: const TextStyle(
+            color: Colors.orangeAccent, fontSize: 11),
+      ),
+    );
+  }
+}
+
+// Decorative blurred orb
+class _Orb extends StatelessWidget {
+  final double size;
+  final Color color;
+  final double opacity;
+
+  const _Orb(
+      {required this.size,
+      required this.color,
+      required this.opacity});
+
+  @override
+  Widget build(BuildContext context) {
+    return ImageFiltered(
+      imageFilter: ImageFilter.blur(sigmaX: 60, sigmaY: 60),
+      child: Container(
+        width: size,
+        height: size,
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          color: color.withValues(alpha: opacity),
         ),
       ),
     );
