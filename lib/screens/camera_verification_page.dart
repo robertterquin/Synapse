@@ -259,7 +259,7 @@ class _CameraVerificationPageState extends State<CameraVerificationPage>
         Image.network(
           _image!.path,
           fit: BoxFit.cover,
-          errorBuilder: (_, _a, _b) => Container(
+          errorBuilder: (ctx, err, st) => Container(
             color: const Color(0xFF0D0D1E),
             child: const Center(
               child: Icon(Icons.image_not_supported_outlined,
