@@ -19,7 +19,7 @@ class SidebarNavigation extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 68,
+      width: 76,
       decoration: BoxDecoration(
         gradient: const LinearGradient(
           begin: Alignment.topCenter,
@@ -42,21 +42,28 @@ class SidebarNavigation extends StatelessWidget {
       child: SafeArea(
         child: Column(
           children: [
-            const SizedBox(height: 22),
+            const SizedBox(height: 28),
 
             // Nav items
-            _buildNavItem(context, index: 0,
-                icon: Icons.map_rounded, label: 'Map'),
-            const SizedBox(height: 2),
-            _buildNavItem(context, index: 1,
-                icon: Icons.person_rounded, label: 'Profile',
-                onTap: () => Navigator.push(context,
+            _buildNavItem(context,
+                index: 0, icon: Icons.map_rounded, label: 'Map'),
+            const SizedBox(height: 10),
+            _buildNavItem(context,
+                index: 1,
+                icon: Icons.person_rounded,
+                label: 'Profile',
+                onTap: () => Navigator.push(
+                    context,
                     MaterialPageRoute(
-                        builder: (_) => ProfilePage(profile: profile)))),
-            const SizedBox(height: 2),
-            _buildNavItem(context, index: 2,
-                icon: Icons.local_hospital_rounded, label: 'Status',
-                onTap: () => Navigator.push(context,
+                        builder: (_) =>
+                            ProfilePage(profile: profile)))),
+            const SizedBox(height: 10),
+            _buildNavItem(context,
+                index: 2,
+                icon: Icons.local_hospital_rounded,
+                label: 'Status',
+                onTap: () => Navigator.push(
+                    context,
                     MaterialPageRoute(
                         builder: (_) =>
                             HospitalStatusPage(profile: profile)))),
@@ -65,11 +72,11 @@ class SidebarNavigation extends StatelessWidget {
 
             // Divider
             _buildDivider(),
-            const SizedBox(height: 8),
+            const SizedBox(height: 14),
 
-            _buildNavItem(context, index: 3,
-                icon: Icons.settings_rounded, label: 'Settings'),
-            const SizedBox(height: 16),
+            _buildNavItem(context,
+                index: 3, icon: Icons.settings_rounded, label: 'Settings'),
+            const SizedBox(height: 24),
           ],
         ),
       ),
@@ -104,63 +111,48 @@ class SidebarNavigation extends StatelessWidget {
     return GestureDetector(
       onTap: onTap ?? () => onItemTapped(index),
       child: AnimatedContainer(
-        duration: const Duration(milliseconds: 200),
-        margin: const EdgeInsets.symmetric(horizontal: 8),
-        padding: const EdgeInsets.symmetric(vertical: 9),
+        duration: const Duration(milliseconds: 220),
+        margin: const EdgeInsets.symmetric(horizontal: 6),
+        padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 8),
         decoration: BoxDecoration(
           color: isSelected
-              ? AppColors.duskyBlue.withValues(alpha: 0.16)
+              ? AppColors.duskyBlue.withValues(alpha: 0.2)
               : Colors.transparent,
-          borderRadius: BorderRadius.circular(14),
+          borderRadius: BorderRadius.circular(16),
+          border: isSelected
+              ? Border.all(
+                  color: AppColors.duskyBlue.withValues(alpha: 0.3),
+                  width: 1.2,
+                )
+              : null,
         ),
         child: Stack(
           alignment: Alignment.center,
           children: [
-            // Left glow indicator strip for selected
-            if (isSelected)
-              Positioned(
-                left: 0,
-                top: 6,
-                bottom: 6,
-                child: Container(
-                  width: 3,
-                  decoration: BoxDecoration(
-                    color: AppColors.duskyBlue,
-                    borderRadius: BorderRadius.circular(4),
-                    boxShadow: [
-                      BoxShadow(
-                        color: AppColors.duskyBlue.withValues(alpha: 0.7),
-                        blurRadius: 8,
-                      ),
-                    ],
-                  ),
-                ),
-              ),
             Column(
               mainAxisSize: MainAxisSize.min,
               children: [
                 AnimatedScale(
-                  scale: isSelected ? 1.12 : 1.0,
-                  duration: const Duration(milliseconds: 200),
+                  scale: isSelected ? 1.15 : 1.0,
+                  duration: const Duration(milliseconds: 220),
                   child: Icon(
                     icon,
                     color: isSelected
                         ? AppColors.lavenderHaze
-                        : AppColors.lavenderHaze.withValues(alpha: 0.38),
-                    size: 22,
+                        : AppColors.lavenderHaze.withValues(alpha: 0.42),
+                    size: 24,
                   ),
                 ),
-                const SizedBox(height: 4),
+                const SizedBox(height: 6),
                 Text(
                   label,
                   style: TextStyle(
                     fontSize: 9,
                     color: isSelected
                         ? AppColors.lavenderHaze
-                        : AppColors.lavenderHaze.withValues(alpha: 0.38),
-                    fontWeight:
-                        isSelected ? FontWeight.w700 : FontWeight.w400,
-                    letterSpacing: 0.3,
+                        : AppColors.lavenderHaze.withValues(alpha: 0.42),
+                    fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
+                    letterSpacing: 0.4,
                   ),
                   overflow: TextOverflow.ellipsis,
                   maxLines: 1,
@@ -168,6 +160,29 @@ class SidebarNavigation extends StatelessWidget {
                 ),
               ],
             ),
+            // Top glow indicator for selected
+            if (isSelected)
+              Positioned(
+                top: 0,
+                child: Container(
+                  width: 32,
+                  height: 3,
+                  decoration: BoxDecoration(
+                    color: AppColors.duskyBlue,
+                    borderRadius: const BorderRadius.only(
+                      bottomLeft: Radius.circular(2),
+                      bottomRight: Radius.circular(2),
+                    ),
+                    boxShadow: [
+                      BoxShadow(
+                        color: AppColors.duskyBlue.withValues(alpha: 0.8),
+                        blurRadius: 10,
+                        offset: const Offset(0, 2),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
           ],
         ),
       ),
