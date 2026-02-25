@@ -1,6 +1,7 @@
 ﻿import 'dart:ui';
 import 'package:flutter/material.dart';
 import '../constants/app_colors.dart';
+import '../data/hospitals_data.dart';
 import '../models/user_profile.dart';
 import 'camera_verification_page.dart';
 
@@ -15,7 +16,7 @@ class _LoginPageState extends State<LoginPage>
     with SingleTickerProviderStateMixin {
   final _formKey = GlobalKey<FormState>();
   final _nameController = TextEditingController();
-  final _hospitalController = TextEditingController();
+  String? _selectedHospital;
   final _idNumberController = TextEditingController();
   final _passwordController = TextEditingController();
   final _specializationController = TextEditingController();
@@ -37,7 +38,6 @@ class _LoginPageState extends State<LoginPage>
   @override
   void dispose() {
     _nameController.dispose();
-    _hospitalController.dispose();
     _idNumberController.dispose();
     _passwordController.dispose();
     _specializationController.dispose();
@@ -55,7 +55,7 @@ class _LoginPageState extends State<LoginPage>
     if (!_formKey.currentState!.validate()) return;
     final profile = UserProfile(
       name: _nameController.text,
-      hospital: _hospitalController.text,
+      hospital: _selectedHospital!,
       idNumber: _idNumberController.text,
       specialization: _specializationController.text.isNotEmpty
           ? _specializationController.text
@@ -220,16 +220,7 @@ class _LoginPageState extends State<LoginPage>
                                                     : null,
                                           ),
                                           const SizedBox(height: 12),
-                                          _buildField(
-                                            controller:
-                                                _hospitalController,
-                                            label: 'Hospital',
-                                            icon: Icons.local_hospital_outlined,
-                                            validator: (v) =>
-                                                v == null || v.isEmpty
-                                                    ? 'Required'
-                                                    : null,
-                                          ),
+                                          _buildHospitalDropdown(),
                                           const SizedBox(height: 12),
                                           _buildField(
                                             controller:
@@ -387,6 +378,69 @@ class _LoginPageState extends State<LoginPage>
           ],
         ),
       ),
+    );
+  }
+
+  Widget _buildHospitalDropdown() {
+    final names = metroManilaHospitals.map((h) => h.name).toList()..sort();
+    return DropdownButtonFormField<String>(
+      value: _selectedHospital,
+      isExpanded: true,
+      dropdownColor: const Color(0xFF1E0054),
+      iconEnabledColor: AppColors.duskyBlue,
+      style: const TextStyle(color: Colors.white, fontSize: 14),
+      decoration: InputDecoration(
+        labelText: 'Hospital',
+        labelStyle: TextStyle(
+          color: AppColors.lavenderHaze.withValues(alpha: 0.65),
+          fontSize: 13,
+        ),
+        prefixIcon: Icon(Icons.local_hospital_outlined,
+            color: AppColors.duskyBlue.withValues(alpha: 0.85), size: 20),
+        filled: true,
+        fillColor: Colors.white.withValues(alpha: 0.07),
+        contentPadding:
+            const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(14),
+          borderSide:
+              BorderSide(color: Colors.white.withValues(alpha: 0.12)),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(14),
+          borderSide:
+              const BorderSide(color: AppColors.duskyBlue, width: 1.5),
+        ),
+        errorBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(14),
+          borderSide: const BorderSide(color: Colors.redAccent),
+        ),
+        focusedErrorBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(14),
+          borderSide:
+              const BorderSide(color: Colors.redAccent, width: 1.5),
+        ),
+        errorStyle:
+            const TextStyle(color: Colors.orangeAccent, fontSize: 11),
+      ),
+      hint: Text(
+        'Select your hospital',
+        style: TextStyle(
+            color: AppColors.lavenderHaze.withValues(alpha: 0.45),
+            fontSize: 13),
+      ),
+      items: names
+          .map((name) => DropdownMenuItem(
+                value: name,
+                child: Text(
+                  name,
+                  style: const TextStyle(color: Colors.white, fontSize: 13),
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ))
+          .toList(),
+      onChanged: (value) => setState(() => _selectedHospital = value),
+      validator: (v) => v == null || v.isEmpty ? 'Please select a hospital' : null,
     );
   }
 

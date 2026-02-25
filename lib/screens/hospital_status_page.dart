@@ -278,22 +278,26 @@ class _HospitalStatusPageState extends State<HospitalStatusPage>
                             ),
                           ),
                           const SizedBox(width: 6),
-                          Container(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 6, vertical: 2),
-                            decoration: BoxDecoration(
-                              color:
-                                  hospital.status.color.withValues(alpha: 0.1),
-                              borderRadius: BorderRadius.circular(4),
-                            ),
-                            child: Text(
-                              hospital.status.label,
-                              style: TextStyle(
-                                fontSize: 10,
-                                fontWeight: FontWeight.w600,
-                                color: hospital.status.color,
+                          Flexible(
+                            fit: FlexFit.loose,
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 6, vertical: 2),
+                              decoration: BoxDecoration(
+                                color: hospital.status.color
+                                    .withValues(alpha: 0.1),
+                                borderRadius: BorderRadius.circular(4),
                               ),
-                              overflow: TextOverflow.ellipsis,
+                              child: Text(
+                                hospital.status.label,
+                                style: TextStyle(
+                                  fontSize: 10,
+                                  fontWeight: FontWeight.w600,
+                                  color: hospital.status.color,
+                                ),
+                                overflow: TextOverflow.ellipsis,
+                                maxLines: 1,
+                              ),
                             ),
                           ),
                         ],

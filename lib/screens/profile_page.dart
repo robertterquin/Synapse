@@ -101,6 +101,9 @@ class _ProfilePageState extends State<ProfilePage> {
                         const SizedBox(height: 16),
                         Text(
                           profile.name,
+                          textAlign: TextAlign.center,
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
                           style: const TextStyle(
                             fontSize: 24,
                             fontWeight: FontWeight.bold,

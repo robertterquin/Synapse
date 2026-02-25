@@ -57,12 +57,16 @@ class HospitalDetailSheet extends StatelessWidget {
                   Icon(hospital.status.icon,
                       color: hospital.status.color, size: 18),
                   const SizedBox(width: 8),
-                  Text(
-                    hospital.status.label,
-                    style: TextStyle(
-                      color: hospital.status.color,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 13,
+                  Flexible(
+                    child: Text(
+                      hospital.status.label,
+                      style: TextStyle(
+                        color: hospital.status.color,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 13,
+                      ),
+                      overflow: TextOverflow.ellipsis,
+                      maxLines: 2,
                     ),
                   ),
                 ],
