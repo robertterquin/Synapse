@@ -160,29 +160,6 @@ class SidebarNavigation extends StatelessWidget {
                 ),
               ],
             ),
-            // Top glow indicator for selected
-            if (isSelected)
-              Positioned(
-                top: 0,
-                child: Container(
-                  width: 32,
-                  height: 3,
-                  decoration: BoxDecoration(
-                    color: AppColors.duskyBlue,
-                    borderRadius: const BorderRadius.only(
-                      bottomLeft: Radius.circular(2),
-                      bottomRight: Radius.circular(2),
-                    ),
-                    boxShadow: [
-                      BoxShadow(
-                        color: AppColors.duskyBlue.withValues(alpha: 0.8),
-                        blurRadius: 10,
-                        offset: const Offset(0, 2),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
           ],
         ),
       ),
