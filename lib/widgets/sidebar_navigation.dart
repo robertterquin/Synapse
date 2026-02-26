@@ -3,6 +3,7 @@ import '../constants/app_colors.dart';
 import '../models/user_profile.dart';
 import '../screens/profile_page.dart';
 import '../screens/hospital_status_page.dart';
+import '../screens/login_page.dart';
 
 class SidebarNavigation extends StatelessWidget {
   final UserProfile profile;
@@ -74,9 +75,98 @@ class SidebarNavigation extends StatelessWidget {
             _buildDivider(),
             const SizedBox(height: 14),
 
-            _buildNavItem(context,
-                index: 3, icon: Icons.settings_rounded, label: 'Settings'),
+            _buildOptionsMenu(context),
             const SizedBox(height: 24),
+          ],
+        ),
+      ),
+    );
+  }
+
+  void _showOptionsMenu(BuildContext context) {
+    showMenu<String>(
+      context: context,
+      position: const RelativeRect.fromLTRB(70, 0, 0, 80),
+      items: [
+        PopupMenuItem<String>(
+          value: 'settings',
+          child: Row(
+            children: [
+              const Icon(Icons.settings_rounded, size: 18),
+              const SizedBox(width: 12),
+              Text('Settings',
+                  style: TextStyle(
+                      color: AppColors.lavenderHaze, fontSize: 14)),
+            ],
+          ),
+        ),
+        const PopupMenuDivider(),
+        PopupMenuItem<String>(
+          value: 'logout',
+          child: Row(
+            children: [
+              const Icon(Icons.logout_rounded, size: 18, color: Color(0xFFFF6B6B)),
+              const SizedBox(width: 12),
+              const Text('Logout',
+                  style: TextStyle(color: Color(0xFFFF6B6B), fontSize: 14)),
+            ],
+          ),
+        ),
+      ],
+      color: AppColors.nightIndigo,
+      elevation: 8,
+    ).then((value) {
+      if (value != null) {
+        if (value == 'logout') {
+          Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(builder: (_) => const LoginPage()),
+            (route) => false,
+          );
+        } else if (value == 'settings') {
+          onItemTapped(3);
+        }
+      }
+    });
+  }
+
+  Widget _buildOptionsMenu(BuildContext context) {
+    return GestureDetector(
+      onTap: () => _showOptionsMenu(context),
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 220),
+        margin: const EdgeInsets.symmetric(horizontal: 6),
+        padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 8),
+        decoration: BoxDecoration(
+          color: Colors.transparent,
+          borderRadius: BorderRadius.circular(16),
+        ),
+        child: Stack(
+          alignment: Alignment.center,
+          children: [
+            Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(
+                  Icons.more_vert_rounded,
+                  color: AppColors.lavenderHaze.withValues(alpha: 0.42),
+                  size: 24,
+                ),
+                const SizedBox(height: 6),
+                Text(
+                  'Options',
+                  style: TextStyle(
+                    fontSize: 9,
+                    color: AppColors.lavenderHaze.withValues(alpha: 0.42),
+                    fontWeight: FontWeight.w500,
+                    letterSpacing: 0.4,
+                  ),
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: 1,
+                  textAlign: TextAlign.center,
+                ),
+              ],
+            ),
           ],
         ),
       ),
