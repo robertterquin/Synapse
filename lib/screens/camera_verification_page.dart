@@ -176,7 +176,7 @@ class _CameraVerificationPageState extends State<CameraVerificationPage>
     final text = switch (_step) {
       _Step.idle =>
         'Take a photo or upload your PRC License\nor Professional ID',
-      _Step.scanning => 'Scanning your credentialsâ€¦',
+      _Step.scanning => 'Scanning your credentials...',
       _Step.verified => 'Identity verified!',
     };
 
@@ -535,7 +535,7 @@ class _CameraVerificationPageState extends State<CameraVerificationPage>
         ),
         const SizedBox(height: 12),
         Text(
-          'Scanning credentialsâ€¦',
+          'Scanning credentials...',
           style: TextStyle(
             color: AppColors.lavenderHaze.withValues(alpha: 0.65),
             fontSize: 13,
@@ -578,7 +578,7 @@ class _CameraVerificationPageState extends State<CameraVerificationPage>
         ),
         const SizedBox(height: 6),
         Text(
-          'Redirecting to dashboardâ€¦',
+          'Redirecting to dashboard...',
           style: TextStyle(
             color: AppColors.lavenderHaze.withValues(alpha: 0.5),
             fontSize: 12,
