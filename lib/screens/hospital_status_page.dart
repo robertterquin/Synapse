@@ -89,7 +89,7 @@ class _HospitalStatusPageState extends State<HospitalStatusPage>
 
               // Tab bar
               Container(
-                margin: const EdgeInsets.symmetric(horizontal: 20),
+                margin: const EdgeInsets.symmetric(horizontal: 14),
                 decoration: BoxDecoration(
                   color: Colors.white.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(16),
@@ -105,7 +105,7 @@ class _HospitalStatusPageState extends State<HospitalStatusPage>
                   labelColor: Colors.white,
                   unselectedLabelColor: AppColors.lavenderHaze,
                   labelStyle: const TextStyle(
-                      fontWeight: FontWeight.bold, fontSize: 13),
+                      fontWeight: FontWeight.bold, fontSize: 12),
                   dividerColor: Colors.transparent,
                   tabs: const [
                     Tab(text: 'All'),

@@ -68,6 +68,8 @@ class _LoginPageState extends State<LoginPage>
 
   @override
   Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.sizeOf(context).width;
+    final hPad = (screenWidth * 0.075).clamp(14.0, 28.0);
     return Scaffold(
       body: Container(
         decoration: const BoxDecoration(gradient: AppColors.loginGradient),
@@ -94,8 +96,8 @@ class _LoginPageState extends State<LoginPage>
             SafeArea(
               child: Center(
                 child: SingleChildScrollView(
-                  padding: const EdgeInsets.symmetric(
-                      horizontal: 28, vertical: 32),
+                  padding: EdgeInsets.symmetric(
+                      horizontal: hPad, vertical: 32),
                   child: FadeTransition(
                     opacity: _fadeAnim,
                     child: Column(
@@ -154,6 +156,8 @@ class _LoginPageState extends State<LoginPage>
                         const SizedBox(height: 4),
                         Text(
                           'DOH Metro Manila Hospital Network',
+                          overflow: TextOverflow.ellipsis,
+                          maxLines: 1,
                           style: TextStyle(
                             fontSize: 12,
                             color: AppColors.duskyBlue

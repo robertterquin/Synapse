@@ -159,6 +159,8 @@ class _CameraVerificationPageState extends State<CameraVerificationPage>
           child: Text(
             'ID Verification',
             textAlign: TextAlign.center,
+            overflow: TextOverflow.ellipsis,
+            maxLines: 1,
             style: TextStyle(
               fontSize: 20,
               fontWeight: FontWeight.bold,
