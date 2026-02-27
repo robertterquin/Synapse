@@ -23,6 +23,7 @@ class _DashboardPageState extends State<DashboardPage> {
   int _sidebarIndex = 0;
   Hospital? _selectedHospital;
   bool _legendExpanded = true;
+  bool _showHospitalLabels = true;
   final MapController _mapController = MapController();
   final HospitalManager _manager = HospitalManager();
 
@@ -55,6 +56,9 @@ class _DashboardPageState extends State<DashboardPage> {
             profile: widget.profile,
             selectedIndex: _sidebarIndex,
             onItemTapped: (index) => setState(() => _sidebarIndex = index),
+            showHospitalLabels: _showHospitalLabels,
+            onShowHospitalLabelsChanged: (value) =>
+                setState(() => _showHospitalLabels = value),
           ),
 
           // Main content
@@ -101,8 +105,8 @@ class _DashboardPageState extends State<DashboardPage> {
           markers: _manager.hospitals.map((hospital) {
             return Marker(
               point: LatLng(hospital.latitude, hospital.longitude),
-              width: 52,
-              height: 52,
+              width: _showHospitalLabels ? 100 : 52,
+              height: _showHospitalLabels ? 80 : 52,
               child: GestureDetector(
                 onTap: () {
                   setState(() => _selectedHospital = hospital);
@@ -112,8 +116,8 @@ class _DashboardPageState extends State<DashboardPage> {
                   );
                 },
                 child: OverflowBox(
-                  maxWidth: 60,
-                  maxHeight: 60,
+                  maxWidth: _showHospitalLabels ? 120 : 60,
+                  maxHeight: _showHospitalLabels ? 90 : 60,
                   child: _buildPin(hospital),
                 ),
               ),
@@ -179,6 +183,36 @@ class _DashboardPageState extends State<DashboardPage> {
             size: const Size(10, 5),
             painter: _PinPointerPainter(hospital.status.color),
           ),
+          // Hospital label
+          if (_showHospitalLabels)
+            Padding(
+              padding: const EdgeInsets.only(top: 3),
+              child: Container(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 5, vertical: 2),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(4),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withValues(alpha: 0.15),
+                      blurRadius: 4,
+                      offset: const Offset(0, 1),
+                    ),
+                  ],
+                ),
+                child: Text(
+                  hospital.name,
+                  style: const TextStyle(
+                    fontSize: 8,
+                    fontWeight: FontWeight.w600,
+                    color: AppColors.nightIndigo,
+                  ),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ),
+            ),
         ],
       ),
     );
