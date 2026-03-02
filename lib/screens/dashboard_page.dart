@@ -252,11 +252,6 @@ class _DashboardPageState extends State<DashboardPage> {
                   width: 38,
                   height: 38,
                   decoration: BoxDecoration(
-                    gradient: const LinearGradient(
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
-                      colors: [AppColors.duskyBlue, AppColors.twilightPurple],
-                    ),
                     borderRadius: BorderRadius.circular(12),
                     boxShadow: [
                       BoxShadow(
@@ -266,10 +261,9 @@ class _DashboardPageState extends State<DashboardPage> {
                       ),
                     ],
                   ),
-                  child: const Icon(
-                    Icons.local_hospital_rounded,
-                    color: Colors.white,
-                    size: 20,
+                  child: Image.asset(
+                    'assets/images/synapse_logo.png',
+                    fit: BoxFit.contain,
                   ),
                 ),
                 const SizedBox(width: 12),

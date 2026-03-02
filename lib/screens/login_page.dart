@@ -108,14 +108,6 @@ class _LoginPageState extends State<LoginPage>
                           width: 64,
                           height: 64,
                           decoration: BoxDecoration(
-                            gradient: const LinearGradient(
-                              begin: Alignment.topLeft,
-                              end: Alignment.bottomRight,
-                              colors: [
-                                AppColors.duskyBlue,
-                                AppColors.twilightPurple
-                              ],
-                            ),
                             borderRadius: BorderRadius.circular(20),
                             boxShadow: [
                               BoxShadow(
@@ -126,10 +118,9 @@ class _LoginPageState extends State<LoginPage>
                               ),
                             ],
                           ),
-                          child: const Icon(
-                            Icons.local_hospital_rounded,
-                            color: Colors.white,
-                            size: 30,
+                          child: Image.asset(
+                            'assets/images/synapse_logo.png',
+                            fit: BoxFit.contain,
                           ),
                         ),
                         const SizedBox(height: 16),
