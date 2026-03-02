@@ -1,4 +1,5 @@
-﻿import 'dart:ui';
+﻿import 'dart:io';
+import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import '../constants/app_colors.dart';
@@ -258,8 +259,8 @@ class _CameraVerificationPageState extends State<CameraVerificationPage>
       fit: StackFit.expand,
       children: [
         // Real captured photo
-        Image.network(
-          _image!.path,
+        Image.file(
+          File(_image!.path),
           fit: BoxFit.cover,
           errorBuilder: (ctx, err, st) => Container(
             color: const Color(0xFF0D0D1E),
